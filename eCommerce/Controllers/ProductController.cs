@@ -41,9 +41,9 @@ namespace eCommerce.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+            Product? product = await _context.Products.FindAsync(id);
             
             if (product == null)
             {
