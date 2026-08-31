@@ -67,9 +67,9 @@ namespace eCommerce.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+            Product? product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
