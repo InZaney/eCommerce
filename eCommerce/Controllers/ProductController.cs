@@ -58,12 +58,22 @@ namespace eCommerce.Controllers
             if (ModelState.IsValid)
             {
                 _context.Products.Update(p); // Update the product in the context
-                await _context.SaveChangesAsync();  // Save changes to the database
+                await _context.SaveChangesAsync();
 
-                TempData["Message"] = $"{p.Title} updated successfully!"; // Set a success message in TempData
+                TempData["Message"] = $"{p.Title} updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(p);
+        }
+
+        public IActionResult Delete(int id)
+        {
+            Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
         }
     }
 }
