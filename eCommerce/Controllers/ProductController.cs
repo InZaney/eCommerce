@@ -39,5 +39,17 @@ namespace eCommerce.Controllers
             }
             return View(p); // If the model state is invalid, return the view with the product data and validation errors
         }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+            
+            if (product == null)
+            {
+                return NotFound(); // Return a 404 Not Found response if the product is not found
+            }
+            return View(product);
+        }
     }
 }
