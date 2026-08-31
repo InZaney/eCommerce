@@ -17,6 +17,8 @@ namespace eCommerce.Models
         /// Public facing username for the member.
         /// Alphanumeric characters only
         /// </summary>
+        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Username can only contain alphanumeric characters.")]
+        [StringLength(25)]
         public required string Username { get; set; }
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace eCommerce.Models
         /// <summary>
         /// Member's password
         /// </summary>
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 50 characters.")]
         public required string Password { get; set; }
 
         /// <summary>
