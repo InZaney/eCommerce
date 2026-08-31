@@ -23,6 +23,24 @@ namespace eCommerce.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if Username or Email already exists in the database
+                bool usernameExists = await _context.Members.AnyAsync(m => m.Username == reg.Username);
+                if (usernameExists)
+                {
+                    ModelState.AddModelError(nameof(Member.Username), "This username is already taken. Please choose a different one.");
+                }
+
+                bool emailExists = await _context.Members.AnyAsync(m => m.Email == reg.Email);
+                if (emailExists)
+                {
+                    ModelState.AddModelError(nameof(Member.Email), "This email is already registered. Please use a different email.");
+                }
+
+                if (usernameExists || emailExists)
+                {
+                    return View(reg);
+                }
+
                 // Map ViewModel to Member model tracked by DB
                 Member newMember = new()
                 {
@@ -51,8 +69,8 @@ namespace eCommerce.Controllers
             if (ModelState.IsValid)
             {
                 // Check if UsernameOrEmail and Password match a record in the database
-                Member? loggedInMember = await _context.Members.Where(m => (m.Username == login.UsernameOrEmail || m.Email == login.UsernameOrEmail) && m.Password == login.Password)
-                    .SingleOrDefaultAsync();
+                var loggedInMember = await _context.Members.Where(m => (m.Username == login.UsernameOrEmail || m.Email == login.UsernameOrEmail) && m.Password == login.Password)
+                    .Select(m => new {m.Username, m.MemberId}).SingleOrDefaultAsync();
 
                 if (loggedInMember == null)
                 {
