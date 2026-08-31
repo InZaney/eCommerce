@@ -60,11 +60,20 @@ namespace eCommerce.Controllers
                     return View(login);
                 }
 
-                // Log the user in???
+                // Log the user in
+                HttpContext.Session.SetString("Username", loggedInMember.Username);
+                HttpContext.Session.SetInt32("Id", loggedInMember.MemberId);
 
                 return RedirectToAction("Index", "Home");
             }
             return View(login);
+        }
+
+        public IActionResult Logout()
+        {
+            // Clear the session
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
