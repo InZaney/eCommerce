@@ -13,10 +13,33 @@ namespace eCommerce.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            List<Product> allProducts = await _context.Products.ToListAsync();
-            return View(allProducts);
+            // Configuration: Products per page (easy to change)
+            int productsPerPage = 3;
+
+            // Default to page 1 if not provided
+            int pageNumber = page ?? 1;
+
+            // Get total count of products
+            int totalProducts = await _context.Products.CountAsync();
+
+            // Get the products for the current page
+            List<Product> paginatedProducts = await _context.Products
+                .OrderBy(p => p.Title)
+                .Skip((pageNumber - 1) * productsPerPage)
+                .Take(productsPerPage)
+                .ToListAsync();
+
+            // Create paginated list with metadata
+            PaginatedList<Product> pagedProducts = new PaginatedList<Product>(
+                paginatedProducts,
+                totalProducts,
+                pageNumber,
+                productsPerPage
+            );
+
+            return View(pagedProducts);
         }
 
         [HttpGet]
