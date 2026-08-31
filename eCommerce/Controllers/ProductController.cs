@@ -66,6 +66,7 @@ namespace eCommerce.Controllers
             return View(p);
         }
 
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
@@ -74,6 +75,23 @@ namespace eCommerce.Controllers
                 return NotFound();
             }
             return View(product);
+        }
+
+        [ActionName(nameof(Delete))]
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            Product? product = await _context.Products.FindAsync(id);
+            if ( product == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Remove(product);
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = $"{product.Title} deleted successfully!";
+            return RedirectToAction(nameof(Index));
         }
     }
 }
