@@ -10,7 +10,16 @@ namespace eCommerce.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Ensure Member Username and Email are unique
+            modelBuilder.Entity<Member>().HasIndex(m => m.Username).IsUnique();
+            modelBuilder.Entity<Member>().HasIndex(m => m.Email).IsUnique();
+        }
+
         // Entities to be tracked by DbContext
         public DbSet<Product> Products { get; set; }
+
+        public DbSet<Member> Members { get; set; }
     }
 }

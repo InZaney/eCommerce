@@ -1,0 +1,62 @@
+﻿@model RegistrationViewModel
+@{
+	ViewData["Title"] = "Register for a new account";
+}
+
+<div class="container mt-5">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card shadow">
+				<div class="card-body p-5">
+					<h1 class="card-title text-center mb-4">Register</h1>
+
+					<form method="post" class="needs-validation" novalidate>
+						<div class="mb-3">
+							<label asp-for="Email" class="form-label"></label>
+							<input asp-for="Email" class="form-control" />
+							<span asp-validation-for="Email" class="invalidity text-danger small d-block mt-1"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Username" class="form-label"></label>
+							<input asp-for="Username" class="form-control" />
+							<span asp-validation-for="Username" class="invalid-feedback text-danger small d-block mt-1"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="DateOfBirth" class="form-label"></label>
+							<input asp-for="DateOfBirth" class="form-control" />
+							<span asp-validation-for="DateOfBirth" class="invalid-feedback text-danger small d-block mt-1"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="Password" class="form-label"></label>
+							<input asp-for="Password" class="form-control" />
+							<span asp-validation-for="Password" class="invalid-feedback text-danger small d-block mt-1"></span>
+						</div>
+
+						<div class="mb-3">
+							<label asp-for="ConfirmPassword" class="form-label"></label>
+							<input asp-for="ConfirmPassword" class="form-control" />
+							<span asp-validation-for="ConfirmPassword" class="invalid-feedback text-danger small d-block mt-1"></span>
+						</div>
+
+						<div class="d-grid gap-2 mt-4">
+							<button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+						</div>
+					</form>
+
+					<div class="text-center mt-3">
+						<p class="text-muted small">Already have an account? <a href="#" class="text-decoration-none">Sign in</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
