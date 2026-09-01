@@ -13,7 +13,7 @@ namespace eCommerce.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? page)
+        public async Task<IActionResult> Index(int? page, string? searchTerm, decimal? minPrice, decimal? maxPrice)
         {
             // Configuration: Products per page (easy to change)
             int productsPerPage = 3;
@@ -21,11 +21,32 @@ namespace eCommerce.Controllers
             // Default to page 1 if not provided
             int pageNumber = page ?? 1;
 
-            // Get total count of products
-            int totalProducts = await _context.Products.CountAsync();
+            // Start with all products
+            IQueryable<Product> query = _context.Products;
+
+            // Apply search filter by title
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(p => p.Title.Contains(searchTerm));
+            }
+
+            // Apply minimum price filter
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            // Apply maximum price filter
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            // Get total count of filtered products
+            int totalProducts = await query.CountAsync();
 
             // Get the products for the current page
-            List<Product> paginatedProducts = await _context.Products
+            List<Product> paginatedProducts = await query
                 .OrderBy(p => p.Title)
                 .Skip((pageNumber - 1) * productsPerPage)
                 .Take(productsPerPage)
@@ -38,6 +59,11 @@ namespace eCommerce.Controllers
                 pageNumber,
                 productsPerPage
             );
+
+            // Pass filter values to the view
+            ViewData["SearchTerm"] = searchTerm;
+            ViewData["MinPrice"] = minPrice;
+            ViewData["MaxPrice"] = maxPrice;
 
             return View(pagedProducts);
         }
