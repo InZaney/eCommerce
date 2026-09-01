@@ -10,7 +10,7 @@ This is a website to learn the fundamentals of ASP.NET Core MVC (Model View Cont
 ## How to get started
 - Clone or download the repository
 - Download .NET 10 SDK
-- Recommended to use Visual Studio 2022
+- Recommended to use Visual Studio 2026
 - Open in VS 2022 and hit run
 
 ## Technologies/Frameworks used
